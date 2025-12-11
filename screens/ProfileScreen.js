@@ -1,5 +1,4 @@
-
-import { View, Text, StyleSheet, Pressable } from 'react-native'; 
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native'; // useWindowDimensions eklendi
 import { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, SPACING, RADII, FONTS } from '../theme';
@@ -8,6 +7,8 @@ export default function ProfileScreen() {
   const [theme, setTheme] = useState('light');
   const currentTheme = COLORS[theme];
 
+  const { width } = useWindowDimensions();
+  const isLargeScreen = width > 500;
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
@@ -31,11 +32,15 @@ export default function ProfileScreen() {
       {}
       <View style={[
         styles.card,
-        { backgroundColor: currentTheme.card }
+        { 
+          backgroundColor: currentTheme.card,
+          width: isLargeScreen ? '60%' : '85%', 
+          padding: isLargeScreen ? SPACING.xl : SPACING.lg 
+        }
       ]}>
         <Ionicons 
           name="person-circle-outline" 
-          size={80} 
+          size={isLargeScreen ? 100 : 80} 
           color={currentTheme.text} 
         />
         
@@ -47,7 +52,6 @@ export default function ProfileScreen() {
           Mobile Developer
         </Text>
 
-        {}
         <Pressable
           style={({ pressed }) => [
             styles.likeButton,
@@ -75,13 +79,11 @@ const styles = StyleSheet.create({
     top: 50,
     right: 20,
     padding: SPACING.sm,
-    zIndex: 10, 
+    zIndex: 10,
   },
   card: {
-    width: '85%',
     borderRadius: RADII.md,
     alignItems: 'center',
-    padding: SPACING.lg,
     shadowColor: '#000',
     shadowOpacity: 0.15,
     shadowRadius: 8,
